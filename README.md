@@ -5,6 +5,11 @@
   <img src="https://img.shields.io/github/issues/notprash/manga-cli?color=%23f8f8f2&logo=theregister&style=for-the-badge" />
 </p>
 
+## Dependencies
+- [Pup](https://github.com/ericchiang/pup)
+- [Zathura](https://github.com/pwmt/zathura)
+- [Imagemagick](https://imagemagick.org/index.php)
+- [curl](https://curl.se/)
 
 ## Install
 ```bash
