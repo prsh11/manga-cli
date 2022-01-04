@@ -11,13 +11,13 @@ download_manga () {
     # curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}"  
 
     mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}")
-    declare -p mangaNames > out.log
+    declare -p mangaNames > /dev/null
 
 
 
     # Manga Ids
     mapfile -t mangaIds < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a attr{href}")
-    declare -p mangaIds > out.log
+    declare -p mangaIds > /dev/null
 
 
 
@@ -47,7 +47,7 @@ download_manga () {
 
     mapfile -t chapterImages < <(curl -s "$mangaLink/chapter-$chapterNumber" | pup "div.container-chapter-reader img attr{src}")
     # curl -s "$mangaLink/chapter-$mangaNumber" | pup "div.container-chapter-reader img attr{src}"
-    declare -p chapterImages > out.log
+    declare -p chapterImages > /dev/null
 
 
 
