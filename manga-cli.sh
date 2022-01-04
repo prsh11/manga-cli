@@ -1,9 +1,9 @@
 #!/bin/bash
 search_url="https://mangakakalot.com/search/story/"
 base_url="https://mangakakalot.com/"
-image_dir="~/.cache/manga-cli/"
+image_dir="$HOME/.cache/manga-cli/"
 
-search_query () {
+download_manga () {
     echo -n "Search manga: " 
     read mangaName
 
@@ -33,39 +33,45 @@ search_query () {
     read mangaNumber
 
     mangaNumber=$((mangaNumber-1))
+    name=$(echo ${mangaNames[$mangaNumber]})
     mangaLink=$(echo ${mangaIds[$mangaNumber]})
 
 
     echo -n "Enter chapter number: "
     read chapterNumber
+    if [ -f "$image_dir$mangaName-$chapterNumber.pdf" ]; then
+        echo "Manga files exists .cache, opening it..."
+        zathura "$image_dir$mangaName-$chapterNumber.pdf"
+        exit -1
+    fi
 
-    mapfile -t chapterImages < <(curl -s "$mangaLink/chapter-$mangaNumber" | pup "div.container-chapter-reader img attr{src}")
+    mapfile -t chapterImages < <(curl -s "$mangaLink/chapter-$chapterNumber" | pup "div.container-chapter-reader img attr{src}")
     # curl -s "$mangaLink/chapter-$mangaNumber" | pup "div.container-chapter-reader img attr{src}"
     declare -p chapterImages > out.log
 
-    echo "$mangaLink/chapter-$chapterNumber"
 
 
 
 
     i=0
-    # if [ ! -d "$image_dir" ]; then
-    #     mkdir ~/.cache/manga-cli
-    # fi
+    if [ ! -d "$image_dir" ]; then
+        mkdir ~/.cache/manga-cli
+    fi
 
 
-    echo $chapterImages
+    clear
+    echo "Getting data on the chapters...."
     for each in "${chapterImages[@]}"
     do
-        # curl $each --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36"
-        curl -s $each --output "$mangaName-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
-        echo $each
+        curl -s $each --output "$image_dir$mangaName-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
         ((i=i+1))
     done
 
-    convert $mangaName* "$mangaName-$chapterNumber.pdf"
-    rm *.jpg
-    zathura "$mangaName-$mangaNumber.pdf"
+
+    convert $image_dir$mangaName* "$image_dir$mangaName-$chapterNumber.pdf"
+    rm $image_dir/*.jpg
+    clear
+    zathura "$image_dir$mangaName-$chapterNumber.pdf"
 
 
 
@@ -74,4 +80,4 @@ search_query () {
 
 }
 
-search_query
+download_manga
