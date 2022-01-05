@@ -34,6 +34,7 @@ search_manga() {
 
     mangaNumber=$((mangaNumber-1))
     name=$(echo ${mangaNames[$mangaNumber]})
+    name="${name// /_}"
     mangaLink=$(echo ${mangaIds[$mangaNumber]})
 
 
@@ -56,7 +57,6 @@ select_chapter () {
 
 
 
-    i=0
     if [ ! -d "$image_dir" ]; then
         mkdir ~/.cache/manga-cli
     fi
@@ -72,21 +72,18 @@ download_manga () {
 
     clear
     echo "Getting data on the chapters...."
+    i=0
     for each in "${chapterImages[@]}"
     do
-        curl -s $each --output "$image_dir$mangaName-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
+        curl -s $each --output "$image_dir$name-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
         ((i=i+1))
     done
 
-    convert $image_dir$mangaName* "$image_dir$mangaName-$chapterNumber.pdf"
+    convert $(ls -v $image_dir*.jpg) -auto-orient -compress "$image_dir$name-$chapterNumber.pdf"
+
     rm $image_dir/*.jpg
     clear
-    zathura "$image_dir$mangaName-$chapterNumber.pdf"
-
-
-
-
-
+    zathura "$image_dir$name-$chapterNumber.pdf"
 
 }
 
