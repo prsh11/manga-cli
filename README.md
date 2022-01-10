@@ -13,10 +13,14 @@
 
 ## Install
 ```bash
-$ git clone https://github.com/notprash/manga-cli.git
-$ cd manga-cli
-$ chmod +x ./manga-cli
-$ ./manga-cli
+git clone https://github.com/notprash/manga-cli.git
+cd manga-cli
+sudo make
+```
+
+## Uninstall
+```bash
+sudo make uninstall
 ```
 
 
