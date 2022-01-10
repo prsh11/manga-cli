@@ -35,6 +35,7 @@ search_manga() {
     mangaNumber=$((mangaNumber-1))
     name=$(echo ${mangaNames[$mangaNumber]})
     name="${name// /_}"
+    name=${name//[^[:alnum:]]/}
     mangaLink=$(echo ${mangaIds[$mangaNumber]})
 
 
@@ -43,13 +44,23 @@ search_manga() {
 select_chapter () {
     echo -n "Enter chapter number: "
     read chapterNumber
+
     if [ -f "$image_dir$mangaName-$chapterNumber.pdf" ]; then
         echo "Manga files exists .cache, opening it..."
         zathura "$image_dir$mangaName-$chapterNumber.pdf"
         exit -1
     fi
 
-    mapfile -t chapterImages < <(curl -s "$mangaLink/chapter-$chapterNumber" | pup "div.container-chapter-reader img attr{src}")
+
+
+
+    link="$mangaLink/chapter-$chapterNumber"
+
+    if [[ $mangaLink == *"read-"* ]]; then
+        link="https://mangakakalot.com/chapter/$name/chapter_$chapterNumber"
+    fi
+
+    mapfile -t chapterImages < <(curl -s "$link" | pup "div.container-chapter-reader img attr{src}")
     # curl -s "$mangaLink/chapter-$mangaNumber" | pup "div.container-chapter-reader img attr{src}"
     declare -p chapterImages > /dev/null
 
