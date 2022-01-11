@@ -45,9 +45,9 @@ select_chapter () {
     echo -n "Enter chapter number: "
     read chapterNumber
 
-    if [ -f "$image_dir$mangaName-$chapterNumber.pdf" ]; then
+    if [ -f "$image_dir$name-$chapterNumber.cbz" ]; then
         echo "Manga files exists .cache, opening it..."
-        zathura "$image_dir$mangaName-$chapterNumber.pdf"
+        zathura "$image_dir$name-$chapterNumber.cbz"
         exit -1
     fi
 
@@ -83,19 +83,19 @@ download_manga () {
 
     clear
     echo "Getting data on the chapters...."
-    i=0
+    i=11
 
+    files=""
     for each in "${chapterImages[@]}"
     do
         curl -s $each --output "$image_dir$name-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
         ((i=i+1))
     done
 
-    convert $(ls -v $image_dir*.jpg) -auto-orient "$image_dir$name-$chapterNumber.pdf"
+    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
     rm $image_dir/*.jpg
-    clear
-    zathura "$image_dir$name-$chapterNumber.pdf"
+    zathura "$image_dir$name-$chapterNumber.cbz"
 
 }
 
