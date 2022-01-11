@@ -3,8 +3,14 @@ search_url="https://mangakakalot.com/search/story/"
 base_url="https://mangakakalot.com/"
 image_dir="$HOME/.cache/manga-cli/"
 
+
+# colors
+Green='\033[0;32m' 
+Yellow='\033[0;33m' 
+White='\033[0;37m' 
+
 search_manga() {
-    echo -n "Search manga: " 
+    echo -n -e "${Yellow}Search manga: " 
     read mangaName
 
     mangaName="${mangaName// /_}"
@@ -25,11 +31,11 @@ search_manga() {
     i=1
     for each in "${mangaNames[@]}"
     do
-        echo "[$i]$each"
+        echo -e "${White}[$i]$each"
         ((i=i+1))
     done
 
-    echo -n "Enter Number: "
+    echo -n -e "${Yellow}Enter Number: "
     read mangaNumber
 
     mangaNumber=$((mangaNumber-1))
@@ -42,12 +48,13 @@ search_manga() {
 }
 
 select_chapter () {
-    echo -n "Enter chapter number: "
+    echo -n -e "${Yellow}Enter chapter number: "
     read chapterNumber
 
     if [ -f "$image_dir$name-$chapterNumber.cbz" ]; then
-        echo "Manga files exists .cache, opening it..."
-        zathura "$image_dir$name-$chapterNumber.cbz"
+        clear
+        echo -e "${Green}Manga file exists .cache, opening it..."
+        zathura "$image_dir$name-$chapterNumber.cbz" &
         exit -1
     fi
 
@@ -82,7 +89,7 @@ download_manga () {
     select_chapter
 
     clear
-    echo "Getting data on the chapters...."
+    echo -e "${Green}Getting data on the chapters...."
     i=11
 
     files=""
@@ -95,7 +102,8 @@ download_manga () {
     zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
     rm $image_dir/*.jpg
-    zathura "$image_dir$name-$chapterNumber.cbz"
+    clear
+    zathura "$image_dir$name-$chapterNumber.cbz" &
 
 }
 

@@ -4,9 +4,7 @@ PREFIX := /usr/local
 all: install
 
 install:
-	# copies manga-cli file to /usr/local/bin/manga-cli, which should be in path
 	cp manga-cli $(DESTDIR)$(PREFIX)/bin/manga-cli
-	# marks manga-cli executable
 	chmod 0755 $(DESTDIR)$(PREFIX)/bin/manga-cli
 
 uninstall:
