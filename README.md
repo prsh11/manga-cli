@@ -6,12 +6,14 @@
 </p>
 
 ## Dependencies
-- [Pup](https://github.com/ericchiang/pup)
-- [Zathura](https://github.com/pwmt/zathura)
-- [Imagemagick](https://imagemagick.org/index.php)
-- [curl](https://curl.se/)
+
+-   [pup](https://github.com/ericchiang/pup)
+-   [zathura](https://github.com/pwmt/zathura)
+-   [zathura-cb](https://github.com/pwmt/zathura-cb)
+-   [curl](https://curl.se/)
 
 ## Install
+
 ```bash
 git clone https://github.com/notprash/manga-cli.git
 cd manga-cli
@@ -19,8 +21,7 @@ sudo make
 ```
 
 ## Uninstall
+
 ```bash
 sudo make uninstall
 ```
-
-
