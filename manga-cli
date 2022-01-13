@@ -63,8 +63,12 @@ select_chapter () {
 
     link="$mangaLink/chapter-$chapterNumber"
 
+    link2=${mangaLink##*/}
+    
     if [[ $mangaLink == *"read-"* ]]; then
         link="https://mangakakalot.com/chapter/$name/chapter_$chapterNumber"
+    elif [[ ! $link2 == *"manga-"* ]]; then
+        link="https://mangakakalot.com/chapter/$link2/chapter_$chapterNumber"
     fi
 
     mapfile -t chapterImages < <(curl -s "$link" | pup "div.container-chapter-reader img attr{src}")
