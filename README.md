@@ -28,6 +28,9 @@ manga-cli
 ```bash
 $ manga-cli
 Search manga: some manga
+[1]....
+[2]....
+[3]....
 Enter Number: 1
 Enter Chapter: list (start) (end)
 ```
