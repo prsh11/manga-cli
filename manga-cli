@@ -12,13 +12,11 @@ White='\033[0;37m'
 search_manga() {
     echo -n -e "${Yellow}Search manga: " 
     read mangaName
-
     mangaName="${mangaName// /_}"
     # curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}"  
 
     mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}")
     declare -p mangaNames > /dev/null
-
 
 
     # Manga Ids
@@ -50,6 +48,29 @@ search_manga() {
 select_chapter () {
     echo -n -e "${Yellow}Enter chapter number: "
     read chapterNumber
+
+	chapterNumber=${chapterNumber,,}
+	#list=${chapterNumber%%+([[:digit:]])}
+	list=$(echo $chapterNumber | sed 's/[0-9]//g')
+
+	numbersList=$(echo "$chapterNumber" | grep -o -E '[0-9]+')
+	number_array=($numbersList)
+	if [ $list = "list" ]; then
+		#curl -s $mangaLink | pup ".row-content-chapter .a-h a:nth-child(n+${number_array[0]}):nth-child(n+${number_array[1]}) text{}"
+
+		start=${number_array[0]}
+		end=${number_array[1]}
+		                                                                                                 
+		s=$(curl -s $mangaLink)                                               
+		for ((i = $start ; i <= $end ; i++)); do
+			j=$(echo -e $s | pup ".row-content-chapter .a-h:nth-last-child($i) a text{}")                          
+			echo -e "${White}$j"
+		done
+
+    	echo -n -e "${Yellow}Enter chapter number: "
+    	read chapterNumber
+	fi
+		
 
     if [ -f "$image_dir$name-$chapterNumber.cbz" ]; then
         clear
