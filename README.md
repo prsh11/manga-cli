@@ -22,9 +22,16 @@ sudo make
 ```
 
 ## Usage
-```bash
-manga-cli
+
 ```
+
+Usage:
+	manga-cli -l [<query>]
+Options:
+	-l lists manga
+
+```
+
 ## Uninstall
 
 ```bash
