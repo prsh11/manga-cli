@@ -50,26 +50,6 @@ select_chapter () {
     read chapterNumber
 
 	chapterNumber=${chapterNumber,,}
-	#list=${chapterNumber%%+([[:digit:]])}
-	list=$(echo $chapterNumber | sed 's/[0-9]//g')
-
-	numbersList=$(echo "$chapterNumber" | grep -o -E '[0-9]+')
-	number_array=($numbersList)
-	if [ $list = "list" ]; then
-		#curl -s $mangaLink | pup ".row-content-chapter .a-h a:nth-child(n+${number_array[0]}):nth-child(n+${number_array[1]}) text{}"
-
-		start=${number_array[0]}
-		end=${number_array[1]}
-		                                                                                                 
-		s=$(curl -s $mangaLink)                                               
-		for ((i = $start ; i <= $end ; i++)); do
-			j=$(echo -e $s | pup ".row-content-chapter .a-h:nth-last-child($i) a text{}")                          
-			echo -e "${White}$j"
-		done
-
-    	echo -n -e "${Yellow}Enter chapter number: "
-    	read chapterNumber
-	fi
 		
 
     if [ -f "$image_dir$name-$chapterNumber.cbz" ]; then
