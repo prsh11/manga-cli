@@ -115,7 +115,7 @@ get_images() {
         clear
         echo -e "${Green}Manga file exists .cache, opening it..."
         zathura "$image_dir$name-$chapterNumber.cbz" &
-        exit -1
+        choose_next
     fi
 
 
@@ -154,6 +154,7 @@ list_manga() {
 }
 
 choose_next() {
+    clear
     echo -e "${White}next chapter ${Green}(n)"
     echo -e "${White}quit ${Green}(q)"
     echo -e "${White}previous chapter ${Green}(p)"
@@ -174,6 +175,9 @@ choose_next() {
 
     elif [ "${option}" = "q" ]; then
         exit -1
+
+    else 
+        choose_next
 
     fi
 
