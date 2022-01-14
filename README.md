@@ -1,8 +1,9 @@
 <h1 align="center"> Manga-CLI </h1>
 <p align="center">Script to read manga from cli. It scrapes <a href="https://mangakakalot.com/">mangakakalot</a></p>
 <p align="center">
-  <img src="https://img.shields.io/github/stars/notprash/manga-cli?logo=startrek&logoColor=%23f8f8f2&style=for-the-badge" />
-  <img src="https://img.shields.io/github/issues/notprash/manga-cli?color=%23f8f8f2&logo=theregister&style=for-the-badge" />
+  <img src="https://img.shields.io/github/stars/notprash/manga-cli?logo=github&style=for-the-badge" />
+  <img src="https://img.shields.io/github/issues/notprash/manga-cli?style=for-the-badge" />
+  <img src="https://img.shields.io/maintenance/yes/2022?style=for-the-badge" />
 </p>
 
 ## Dependencies
