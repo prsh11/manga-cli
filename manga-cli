@@ -3,16 +3,24 @@ search_url="https://mangakakalot.com/search/story/"
 base_url="https://mangakakalot.com/"
 image_dir="$HOME/.cache/manga-cli/"
 
-
 # colors
 Green='\033[0;32m' 
 Yellow='\033[0;33m' 
 White='\033[0;37m' 
 
+mangaName=$1
+
 search_manga() {
-    echo -n -e "${Yellow}Search manga: " 
-    read mangaName
-    mangaName="${mangaName// /_}"
+
+    if [ -z $mangaName ]
+    then
+        echo -n -e "${Yellow}Search manga: " 
+        read mangaName
+        mangaName="${mangaName// /_}"
+    else
+        mangaName="${mangaName//-/_}"
+    fi
+
     # curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}"  
 
     mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}")
@@ -22,8 +30,6 @@ search_manga() {
     # Manga Ids
     mapfile -t mangaIds < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a attr{href}")
     declare -p mangaIds > /dev/null
-
-
 
 
     i=1
@@ -112,4 +118,33 @@ download_manga () {
 
 }
 
+list_manga() {
+    search_manga
+
+    output=$(curl -s $mangaLink | pup ".row-content-chapter .a-h a text{}")
+
+    echo -e "${White}$output"
+}
+
+# Flags
+while [ "$2" != "" ]; do
+    case $2 in
+    -l)
+        list_manga
+        exit -1
+        ;;
+    -t | --tag)
+        shift # remove `-t` or `--tag` from `$1`
+        TAG=$1
+        ;;
+    -h | --help)
+        usage # run usage function
+        ;;
+    *)
+        ;;
+    esac
+    shift # remove the current value for `$1` and use the next
+done
+
 download_manga
+
