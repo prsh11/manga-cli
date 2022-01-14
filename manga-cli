@@ -69,10 +69,49 @@ select_chapter () {
     echo -n -e "${Yellow}Enter chapter number: "
     read chapterNumber
 
-	chapterNumber=${chapterNumber,,}
+    get_images "$mangaLink" "$chapterNumber"
 		
 
-    if [ -f "$image_dir$name-$chapterNumber.cbz" ]; then
+}
+
+download_manga () {
+    search_manga
+
+    select_chapter
+
+    download_chapter
+
+    choose_next
+    clear
+}
+
+download_chapter() {
+
+    clear
+    echo -e "${Green}Getting data on the chapters...."
+    i=11
+
+    for each in "${chapterImages[@]}"
+    do
+        curl -s $each --output "$image_dir$name-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
+        ((i=i+1))
+    done
+
+    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
+
+    rm $image_dir/*.jpg
+    clear
+    zathura "$image_dir$name-$chapterNumber.cbz" &
+    choose_next
+
+}
+
+get_images() {
+    link=$1
+    chNumber=$2
+
+
+    if [ -f "$image_dir$name-$chNumber.cbz" ]; then
         clear
         echo -e "${Green}Manga file exists .cache, opening it..."
         zathura "$image_dir$name-$chapterNumber.cbz" &
@@ -82,14 +121,14 @@ select_chapter () {
 
 
 
-    link="$mangaLink/chapter-$chapterNumber"
+    link="$mangaLink/chapter-$chNumber"
 
     link2=${mangaLink##*/}
     
     if [[ $mangaLink == *"read-"* ]]; then
-        link="https://mangakakalot.com/chapter/$name/chapter_$chapterNumber"
+        link="https://mangakakalot.com/chapter/$name/chapter_$chNumber"
     elif [[ ! $link2 == *"manga-"* ]]; then
-        link="https://mangakakalot.com/chapter/$link2/chapter_$chapterNumber"
+        link="https://mangakakalot.com/chapter/$link2/chapter_$chNumber"
     fi
 
     mapfile -t chapterImages < <(curl -s "$link" | pup "div.container-chapter-reader img attr{src}")
@@ -103,34 +142,8 @@ select_chapter () {
     if [ ! -d "$image_dir" ]; then
         mkdir ~/.cache/manga-cli
     fi
-
-
-
 }
 
-download_manga () {
-    search_manga
-
-    select_chapter
-
-    clear
-    echo -e "${Green}Getting data on the chapters...."
-    i=11
-
-    files=""
-    for each in "${chapterImages[@]}"
-    do
-        curl -s $each --output "$image_dir$name-$i.jpg" -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0' -H 'Accept: image/avif,image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Connection: keep-alive' -H 'Referer: https://readmanganato.com/' -H 'Sec-Fetch-Dest: image' -H 'Sec-Fetch-Mode: no-cors' -H 'Sec-Fetch-Site: cross-site' -H 'If-Modified-Since: Fri, 18 May 2018 10:55:14 GMT' -H 'If-None-Match: "5afeb112-19718"' -H 'Cache-Control: max-age=0'
-        ((i=i+1))
-    done
-
-    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
-
-    rm $image_dir/*.jpg
-    clear
-    zathura "$image_dir$name-$chapterNumber.cbz" &
-
-}
 
 list_manga() {
     search_manga
@@ -140,16 +153,38 @@ list_manga() {
     echo -e "${White}$output"
 }
 
+choose_next() {
+    echo -e "${White}next chapter ${Green}(n)"
+    echo -e "${White}quit ${Green}(q)"
+    echo -e "${White}previous chapter ${Green}(p)"
+
+    echo -n -e "${Yellow}Enter Option: "
+    read option
+
+    if [ "${option}" = "n" ]
+    then
+        chapterNumber=$((chapterNumber+1))
+        get_images "$mangaLink" "$chapterNumber" 
+        download_chapter
+
+    elif [ "${option}" = "p" ]; then
+        chapterNumber=$((chapterNumber-1))
+        get_images "$mangaLink" "$chapterNumber" 
+        download_chapter
+
+    elif [ "${option}" = "q" ]; then
+        exit -1
+
+    fi
+
+}
+
 # Flags
 while [ "$1" != "" ]; do
     case $1 in
     -l)
         list_manga
         exit -1
-        ;;
-    -t | --tag)
-        shift # remove `-t` or `--tag` from `$1`
-        TAG=$1
         ;;
     -h | --help)
         
