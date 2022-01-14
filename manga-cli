@@ -8,11 +8,25 @@ Green='\033[0;32m'
 Yellow='\033[0;33m' 
 White='\033[0;37m' 
 
-mangaName=$1
+mangaName="${@: -1}"
+prog="$0"
+
+
+help_text () {
+	while IFS= read -r line; do
+		printf "%s\n" "$line"
+	done <<-EOF
+  
+	Usage:
+	  $prog -l [<query>]
+	Options:
+	  -l lists manga 
+	EOF
+}
 
 search_manga() {
 
-    if [ -z $mangaName ]
+    if [ -z $mangaName ] || [ "${mangaName}" == "${prog}" ] 
     then
         echo -n -e "${Yellow}Search manga: " 
         read mangaName
@@ -127,8 +141,8 @@ list_manga() {
 }
 
 # Flags
-while [ "$2" != "" ]; do
-    case $2 in
+while [ "$1" != "" ]; do
+    case $1 in
     -l)
         list_manga
         exit -1
@@ -138,7 +152,9 @@ while [ "$2" != "" ]; do
         TAG=$1
         ;;
     -h | --help)
-        usage # run usage function
+        
+        help_text
+        exit -1
         ;;
     *)
         ;;
