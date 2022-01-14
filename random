@@ -1,8 +1,0 @@
-listValue="list   "
-
-if [ "$listValue" = "list" ]
-then
-	echo "Success"
-	exit -1
-
-fi
