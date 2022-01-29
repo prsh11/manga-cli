@@ -3,6 +3,9 @@ search_url="https://mangakakalot.com/search/story/"
 base_url="https://mangakakalot.com/"
 image_dir="$HOME/.cache/manga-cli/"
 
+# File format
+file_format="pdf"
+
 # colors
 Green='\033[0;32m' 
 Yellow='\033[0;33m' 
@@ -26,7 +29,7 @@ help_text () {
 
 search_manga() {
 
-    if [ -z $mangaName ] || [ "${mangaName}" == "${prog}" ] 
+    if [ -z $mangaName ] || [ "${mangaName}" == "${prog}" ]  || [ "${mangaName}" == "--pdf" ]
     then
         echo -n -e "${Yellow}Search manga: " 
         read mangaName
@@ -85,6 +88,25 @@ download_manga () {
     clear
 }
 
+create_file() {
+    if [ $file_format == "pdf" ]
+    then 
+        convert $(ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf" 
+        rm $image_dir/*.jpg
+        clear
+        zathura "$image_dir$name-$chapterNumber.pdf" &
+        choose_next
+    else 
+
+        zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
+
+        rm $image_dir/*.jpg
+        clear
+        zathura "$image_dir$name-$chapterNumber.cbz" &
+        choose_next
+    fi
+}
+
 download_chapter() {
 
     clear
@@ -97,12 +119,9 @@ download_chapter() {
         ((i=i+1))
     done
 
-    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
-    rm $image_dir/*.jpg
-    clear
-    zathura "$image_dir$name-$chapterNumber.cbz" &
-    choose_next
+    create_file
+
 
 }
 
@@ -111,10 +130,10 @@ get_images() {
     chNumber=$2
 
 
-    if [ -f "$image_dir$name-$chNumber.cbz" ]; then
+    if [ -f "$image_dir$name-$chNumber.$file_format" ]; then
         clear
         echo -e "${Green}Manga file exists .cache, opening it..."
-        zathura "$image_dir$name-$chapterNumber.cbz" &
+        zathura "$image_dir$name-$chapterNumber.$file_format" &
         choose_next
     fi
 
@@ -193,6 +212,12 @@ while [ "$1" != "" ]; do
     -h | --help)
         
         help_text
+        exit -1
+        ;;
+    --pdf)
+        
+        file_format="pdf"
+        download_manga
         exit -1
         ;;
     *)

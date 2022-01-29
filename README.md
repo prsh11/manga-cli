@@ -12,6 +12,7 @@
 -   [pup](https://github.com/ericchiang/pup)
 -   [zathura](https://github.com/pwmt/zathura)
 -   [zathura-cb](https://github.com/pwmt/zathura-cb)
+-   [imagemagick](https://imagemagick.org/index.php) (optional)
 -   [curl](https://curl.se/)
 
 ## Install
@@ -28,8 +29,10 @@ sudo make
 
 Usage:
 	manga-cli -l [<query>]
+	manga-cli --pdf [<query>]
 Options:
 	-l lists manga
+	--pdf get pdf file
 
 ```
 
