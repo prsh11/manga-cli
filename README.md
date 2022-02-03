@@ -12,7 +12,7 @@
 -   [pup](https://github.com/ericchiang/pup)
 -   [zathura](https://github.com/pwmt/zathura)
 -   [zathura-pdf-mupdf](https://github.com/pwmt/zathura-pdf-mupdf) or [zathura-pdf-mupdf](https://github.com/pwmt/zathura-pdf-poppler) (for pdf support) 
--   [zathura-cb](https://github.com/pwmt/zathura-cb) (optional for pdf)
+-   [zathura-cb](https://github.com/pwmt/zathura-cb) 
 -   [imagemagick](https://imagemagick.org/index.php) (optional)
 -   [curl](https://curl.se/)
 
