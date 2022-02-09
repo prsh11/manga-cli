@@ -12,7 +12,6 @@
 -   [pup](https://github.com/ericchiang/pup)
 -   [zathura](https://github.com/pwmt/zathura)
 -   [zathura-cb](https://github.com/pwmt/zathura-cb) 
-
 -   [curl](https://curl.se/)
 ### PDF support
   - [zathura-pdf-mupdf](https://github.com/pwmt/zathura-pdf-mupdf)
