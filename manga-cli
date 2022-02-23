@@ -91,7 +91,7 @@ download_manga () {
 create_file() {
     if [ $file_format == "pdf" ]
     then 
-        convert $(ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf" 
+        convert $(/usr/bin/ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf" 
         rm $image_dir/*.jpg
         clear
         zathura "$image_dir$name-$chapterNumber.pdf" &
@@ -227,4 +227,3 @@ while [ "$1" != "" ]; do
 done
 
 download_manga
-
