@@ -4,7 +4,7 @@ base_url="https://mangakakalot.com/"
 image_dir="$HOME/.cache/manga-cli/"
 
 # File format
-file_format="pdf"
+file_format="cbz"
 
 # colors
 Green='\033[0;32m' 
@@ -13,6 +13,10 @@ White='\033[0;37m'
 
 mangaName="${@: -1}"
 prog="$0"
+
+
+# Commands
+ls=/usr/bin/ls
 
 
 help_text () {
@@ -91,7 +95,7 @@ download_manga () {
 create_file() {
     if [ $file_format == "pdf" ]
     then 
-        convert $(ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf" 
+        convert $($ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf" 
         rm $image_dir/*.jpg
         clear
         zathura "$image_dir$name-$chapterNumber.pdf" &
