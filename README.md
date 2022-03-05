@@ -7,39 +7,44 @@
   <img src="https://img.shields.io/maintenance/yes/2022?color=%23a3be8c" />
 </p>
 
-## Dependencies
+## Table of contents
 
--   [pup](https://github.com/ericchiang/pup)
--   [zathura](https://github.com/pwmt/zathura)
--   [zathura-cb](https://github.com/pwmt/zathura-cb) 
--   [curl](https://curl.se/)
-### PDF support
-  - [zathura-pdf-mupdf](https://github.com/pwmt/zathura-pdf-mupdf)
-  -  [imagemagick](https://imagemagick.org/index.php) 
+-   [Install](#Installation)
+    -   [Arch](#Arch)
+    -   [Linux](#Linux)
+-   [Uninstall](#Uninstall)
+-   [Dependencies](#Dependencies)
 
 ## Install
 
+### Arch
+
 ```bash
-git clone https://github.com/notprash/manga-cli.git
-cd manga-cli
-sudo make
+yay -S manga-cli-notprash-git
 ```
 
-## Usage
+### Linux
 
-```
+Check the [dependencies](#dependencies)
 
-Usage:
-	manga-cli -l [<query>]
-	manga-cli --pdf [<query>]
-Options:
-	-l lists manga
-	--pdf get pdf file
-
+```bash
+git clone https://github.com/notprash/manga-cli.git && cd manga-cli
+sudo cp manga-cli /usr/local/bin/manga-cli
 ```
 
 ## Uninstall
 
-```bash
-sudo make uninstall
-```
+-   Arch: `yay -R manga-cli-notprash-git`
+-   Linux: `rm /usr/loca/bin/manga-cli`
+
+## Dependencies
+
+-   [pup](https://github.com/ericchiang/pup)
+-   [zathura](https://github.com/pwmt/zathura)
+-   [zathura-cb](https://github.com/pwmt/zathura-cb)
+-   [curl](https://curl.se/)
+
+### PDF support
+
+-   [zathura-pdf-mupdf](https://github.com/pwmt/zathura-pdf-mupdf)
+-   [imagemagick](https://imagemagick.org/index.php)
