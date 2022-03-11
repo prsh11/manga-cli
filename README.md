@@ -35,7 +35,7 @@ sudo cp manga-cli /usr/local/bin/manga-cli
 ## Uninstall
 
 -   Arch: `yay -R manga-cli-notprash-git`
--   Linux: `rm /usr/loca/bin/manga-cli`
+-   Linux: `rm /usr/local/bin/manga-cli`
 
 ## Dependencies
 
