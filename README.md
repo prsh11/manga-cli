@@ -1,10 +1,7 @@
-# THIS PROJECT IS NOW ARCHIVED 
-
-Please use [this](https://github.com/7USTIN/manga-cli)
-
+# Manga CLI
 ## Table of contents
 
--   [Install](#Installation)
+-   [Install](#Install)
     -   [Arch](#Arch)
     -   [Linux](#Linux)
 -   [Uninstall](#Uninstall)
