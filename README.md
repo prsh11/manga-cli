@@ -2,31 +2,23 @@
 ## Table of contents
 
 -   [Install](#Install)
-    -   [Arch](#Arch)
     -   [Linux](#Linux)
 -   [Uninstall](#Uninstall)
 -   [Dependencies](#Dependencies)
 
 ## Install
 
-### Arch
-
-```bash
-yay -S manga-cli-notprash-git
-```
-
 ### Linux
 
 Check the [dependencies](#dependencies)
 
 ```bash
-git clone https://github.com/notprash/manga-cli.git && cd manga-cli
+git clone https://github.com/prsh11/manga-cli.git && cd manga-cli
 sudo cp manga-cli /usr/local/bin/manga-cli
 ```
 
 ## Uninstall
 
--   Arch: `yay -R manga-cli-notprash-git`
 -   Linux: `rm /usr/local/bin/manga-cli`
 
 ## Dependencies
