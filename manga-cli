@@ -1,8 +1,7 @@
 #!/bin/bash
-search_url="https://mangakakalot.com/search/story/"
-base_url="https://mangakakalot.com/"
+search_url="https://m.manganelo.com/search/story/"
+base_url="https://m.manganelo.com/"
 image_dir="$HOME/.cache/manga-cli/"
-history_file="$HOME/.cache/manga-cli-hsts"
 
 # File format
 file_format="cbz"
@@ -41,12 +40,12 @@ search_manga() {
     mangaName="${mangaName//-/_}"
 
 
-    mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a text{}")
+    mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.item-right h3 a text{}")
     declare -p mangaNames > /dev/null
 
 
     # Manga Ids
-    mapfile -t mangaIds < <(curl -s "$search_url$mangaName" | pup "div.story_item_right h3 a attr{href}")
+    mapfile -t mangaIds < <(curl -s "$search_url$mangaName" | pup "div.item-right h3 a attr{href}")
     declare -p mangaIds > /dev/null
 
 
@@ -101,11 +100,6 @@ create_file() {
 }
 
 download_chapter() {
-
-
-    update_hsts
-    exit 0
-
     clear
     echo -e "${Green}Getting data on the chapters...."
     i=11
@@ -129,58 +123,6 @@ download_chapter() {
 
 
 }
-
-
-# History 
-check_for_entry() {
-
-
-    manga=$1
-    link=""
-    chapter=""
-
-
-    while read line; do
-        line=($line)
-
-
-        if [[ ${line[0]} == "$manga" ]]; then
-            open_session=true
-            chapter=${line[1]}
-            link=${line[2]}
-
-        fi
-
-
-
-    done < $history_file
-}
-update_hsts () {
-    manga_name=$1
-    chapter_number=$2
-    mangaLink=$3
-
-
-    check_for_entry "death-note"
-
-
-    if [ $open_session ]; then
-        echo "something"
-    fi
-
-
-    if [ ! -f "$history_file" ]; then
-        touch $history_file
-    fi
-
-    
-
-
-
-
-}
-
-
 
 get_images() {
     link=$1
