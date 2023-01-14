@@ -3,14 +3,18 @@
 
 -   [Install](#Install)
     -   [Linux](#Linux)
+    -   [Arch](#Arch)
 -   [Uninstall](#Uninstall)
 -   [Dependencies](#Dependencies)
 
 ## Install
-
+> Check the [dependencies](#dependencies)
+### Arch
+```bash
+yay -S manga-cli-git
+```
 ### Linux
 
-Check the [dependencies](#dependencies)
 
 ```bash
 git clone https://github.com/prsh11/manga-cli.git && cd manga-cli
@@ -20,6 +24,7 @@ sudo cp manga-cli /usr/local/bin/manga-cli
 ## Uninstall
 
 -   Linux: `rm /usr/local/bin/manga-cli`
+- Arch: `yay -Rns manga-cli-git`
 
 ## Dependencies
 
