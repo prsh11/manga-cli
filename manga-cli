@@ -78,7 +78,7 @@ create_file() {
   else
 
     echo "Converting to cbz..."
-    zip -q "$image_dir$name-$chapterNumber.cbz" "$image_dir*.jpg"
+    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
     rm "$image_dir/*.jpg"
     clear
