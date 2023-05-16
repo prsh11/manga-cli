@@ -70,8 +70,8 @@ select_chapter() {
 create_file() {
   if [ $file_format == "pdf" ]; then
     echo "Converting to pdf..."
-    convert $($ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf"
-    rm "$image_dir/*.jpg"
+    convert $(ls -v $image_dir*.jpg) "$image_dir$name-$chapterNumber.pdf"
+    rm "$image_dir/"*.jpg
     clear
     zathura "$image_dir$name-$chapterNumber.pdf" &
     choose_next
@@ -80,7 +80,7 @@ create_file() {
     echo "Converting to cbz..."
     zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
-    rm "$image_dir/*.jpg"
+    rm "$image_dir/"*.jpg
     clear
     zathura "$image_dir$name-$chapterNumber.cbz" &
     choose_next
