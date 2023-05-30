@@ -2,6 +2,7 @@
 ## Table of contents
 
 -   [Install](#Install)
+    - [Mac](#Mac)
     -   [Linux](#Linux)
     -   [Arch](#Arch)
 -   [Uninstall](#Uninstall)
@@ -9,13 +10,26 @@
 
 ## Install
 > Check the [dependencies](#dependencies)
+### Mac
+```bash
+# dependencies 
+brew tap zegervdv/zathura
+brew install pup
+brew install imagemagick # optional
+brew install zathura 
+brew install zathura-cb  
+bew install bash  # plugin requires new version of bash 4.xx, while macOS uses 3.xx
+
+# install manga-cli
+git clone https://github.com/prsh11/manga-cli.git && cd manga-cli
+sudo cp manga-cli /usr/local/bin/manga-cli
+```
 ### Arch
 ```bash
 yay -S manga-cli-git
 ```
 ### Linux
-
-
+> Install dependencies with your respective package manager
 ```bash
 git clone https://github.com/prsh11/manga-cli.git && cd manga-cli
 sudo cp manga-cli /usr/local/bin/manga-cli
@@ -23,7 +37,7 @@ sudo cp manga-cli /usr/local/bin/manga-cli
 
 ## Uninstall
 
--   Linux: `rm /usr/local/bin/manga-cli`
+-  Linux & Mac: `rm /usr/local/bin/manga-cli`
 - Arch: `yay -Rns manga-cli-git`
 
 ## Dependencies
