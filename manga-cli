@@ -14,8 +14,7 @@ mangaName="${@: -1}"
 prog="$0"
 
 # Commands
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    # Mac OSX
+if [[ "$OSTYPE" == "darwin"* ]]; then  # Mac OSX
     ls=/bin/ls
 else
     ls=/usr/bin/ls
