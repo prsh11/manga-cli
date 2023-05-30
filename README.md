@@ -17,6 +17,7 @@ brew tap zegervdv/zathura
 brew install pup
 brew install imagemagick # optional
 brew install zathura 
+brew install zathura-pdf-mupdf
 brew install zathura-cb  
 bew install bash  # plugin requires new version of bash 4.xx, while macOS uses 3.xx
 
