@@ -15,15 +15,21 @@
 # dependencies 
 brew tap zegervdv/zathura
 brew install pup
-brew install imagemagick # optional
 brew install zathura 
+brew install bash  # plugin requires new version of bash 4.xx, while macOS uses 3.xx
+
+# cbz support
 brew install zathura-cb  
-bew install bash  # plugin requires new version of bash 4.xx, while macOS uses 3.xx
+
+# pdf support
+brew install imagemagick
+brew install zathura-pdf-mupdf
 
 # install manga-cli
 git clone https://github.com/prsh11/manga-cli.git && cd manga-cli
 sudo cp manga-cli /usr/local/bin/manga-cli
 ```
+
 ### Arch
 ```bash
 yay -S manga-cli-git
