@@ -4,6 +4,7 @@ image_dir="$HOME/.cache/manga-cli/"
 
 # File format
 file_format="cbz"
+pdf_viewer=zathura
 
 # colors
 Green='\033[0;32m'
@@ -14,196 +15,199 @@ mangaName="${@: -1}"
 prog="$0"
 
 # Commands
-if [[ "$OSTYPE" == "darwin"* ]]; then  # Mac OSX
-    ls=/bin/ls
+if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OSX
+	ls=/bin/ls
 else
-    ls=/usr/bin/ls
+	ls=/usr/bin/ls
 fi
 
 help_text() {
-  while IFS= read -r line; do
-    printf "%s\n" "$line"
-  done <<-EOF
+	while IFS= read -r line; do
+		printf "%s\n" "$line"
+	done <<-EOF
 		  
 			Usage:
 		        ${prog} [option] 
 			Options:
-		        --pdf  change file format to pdf
-		        --clear-cache Clears the downloaded files
+		        -p  change file format to pdf
+		        -c  clears the downloaded files
+		        -o  select pdf viewer 
+		        -h  displays this message
 	EOF
 }
 
 search_manga() {
-  echo -n -e "${Yellow}Search manga: "
-  read -r mangaName
-  mangaName="${mangaName// /_}"
-  mangaName="${mangaName//-/_}"
+	echo -n -e "${Yellow}Search manga: "
+	read -r mangaName
+	mangaName="${mangaName// /_}"
+	mangaName="${mangaName//-/_}"
 
-  mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.item-right h3 a text{}")
-  declare -p mangaNames >/dev/null
+	mapfile -t mangaNames < <(curl -s "$search_url$mangaName" | pup "div.item-right h3 a text{}")
+	declare -p mangaNames >/dev/null
 
-  # Manga Ids
-  mapfile -t mangaIds < <(curl -s "$search_url$mangaName" | pup "div.item-right h3 a attr{href}")
-  declare -p mangaIds >/dev/null
+	# Manga Ids
+	mapfile -t mangaIds < <(curl -s "$search_url$mangaName" | pup "div.item-right h3 a attr{href}")
+	declare -p mangaIds >/dev/null
 
-  i=1
-  for each in "${mangaNames[@]}"; do
-    echo -e "${White}[$i]$each"
-    ((i = i + 1))
-  done
+	i=1
+	for each in "${mangaNames[@]}"; do
+		echo -e "${White}[$i]$each"
+		((i = i + 1))
+	done
 
-  echo -n -e "${Yellow}Enter Number: "
-  read -r mangaNumber
+	echo -n -e "${Yellow}Enter Number: "
+	read -r mangaNumber
 
-  mangaNumber="$((mangaNumber - 1))"
-  name="${mangaNames[$mangaNumber]}"
-  name="${name// /_}"
-  name="${name//[^[:alnum:]]/}"
-  mangaLink="${mangaIds[$mangaNumber]}"
+	mangaNumber="$((mangaNumber - 1))"
+	name="${mangaNames[$mangaNumber]}"
+	name="${name// /_}"
+	name="${name//[^[:alnum:]]/}"
+	mangaLink="${mangaIds[$mangaNumber]}"
 
 }
 
 select_chapter() {
-  echo -n -e "${Yellow}Enter chapter number: "
-  read -r chapterNumber
+	echo -n -e "${Yellow}Enter chapter number: "
+	read -r chapterNumber
 
-  get_images "$mangaLink" "$chapterNumber"
+	get_images "$mangaLink" "$chapterNumber"
 
 }
 
 create_file() {
-  if [ $file_format == "pdf" ]; then
-    echo "Converting to pdf..."
-    convert $($ls -v $image_dir*.jpg) $image_dir$name-$chapterNumber.pdf
-    rm $image_dir/*.jpg
-    clear
-    zathura $image_dir$name-$chapterNumber.pdf &
-    choose_next
-  else
+	if [ $file_format == "pdf" ]; then
+		echo "Converting to pdf..."
+		convert $($ls -v $image_dir*.jpg) $image_dir$name-$chapterNumber.pdf
+		rm $image_dir/*.jpg
+		clear
+		$pdf_viewer $image_dir$name-$chapterNumber.pdf &
+		choose_next
+	else
 
-    echo "Converting to cbz..."
-    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
+		echo "Converting to cbz..."
+		zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
-    rm $image_dir/*.jpg
-    clear
-    zathura $image_dir$name-$chapterNumber.cbz &
-    choose_next
-  fi
+		rm $image_dir/*.jpg
+		clear
+		$pdf_viewer $image_dir$name-$chapterNumber.cbz &
+		choose_next
+	fi
 }
 
 download_chapter() {
-  clear
-  echo -e "${Green}Getting data on the chapters...."
-  i=11
+	clear
+	echo -e "${Green}Getting data on the chapters...."
+	i=11
 
-  for each in "${chapterImages[@]}"; do
-    curl \
-      --silent \
-      --create-dirs \
-      --header 'Referer: https://readmanganato.com/' \
-      --output "$image_dir$name-$i.jpg" \
-      "${each}" &
+	for each in "${chapterImages[@]}"; do
+		curl \
+			--silent \
+			--create-dirs \
+			--header 'Referer: https://readmanganato.com/' \
+			--output "$image_dir$name-$i.jpg" \
+			"${each}" &
 
-    ((i = i + 1))
-  done
+		((i = i + 1))
+	done
 
-  wait
+	wait
 
-  create_file
+	create_file
 
 }
 
 get_images() {
-  link=$1
-  chNumber=$2
+	link=$1
+	chNumber=$2
 
-  if [ -f "$image_dir$name-$chNumber.$file_format" ]; then
-    clear
-    echo -e "${Green}Manga file exists .cache, opening it..."
-    zathura "$image_dir$name-$chapterNumber.$file_format" &
-    choose_next
-  fi
+	if [ -f "$image_dir$name-$chNumber.$file_format" ]; then
+		clear
+		echo -e "${Green}Manga file exists .cache, opening it..."
+		$pdf_viewer $image_dir$name-$chapterNumber.$file_format &
+		choose_next
+	fi
 
-  link="$mangaLink/chapter-$chNumber"
+	link="$mangaLink/chapter-$chNumber"
 
-  link2=${mangaLink##*/}
+	link2=${mangaLink##*/}
 
-  if [[ $mangaLink == *"read-"* ]]; then
-    link="https://mangakakalot.com/chapter/$name/chapter_$chNumber"
-  elif [[ ! $link2 == *"manga-"* ]]; then
-    link="https://mangakakalot.com/chapter/$link2/chapter_$chNumber"
-  fi
+	if [[ $mangaLink == *"read-"* ]]; then
+		link="https://mangakakalot.com/chapter/$name/chapter_$chNumber"
+	elif [[ ! $link2 == *"manga-"* ]]; then
+		link="https://mangakakalot.com/chapter/$link2/chapter_$chNumber"
+	fi
 
-  mapfile -t chapterImages < <(curl -s "$link" | pup "div.container-chapter-reader img attr{src}")
-  # curl -s "$mangaLink/chapter-$mangaNumber" | pup "div.container-chapter-reader img attr{src}"
-  declare -p chapterImages >/dev/null
+	mapfile -t chapterImages < <(curl -s "$link" | pup "div.container-chapter-reader img attr{src}")
+	# curl -s "$mangaLink/chapter-$mangaNumber" | pup "div.container-chapter-reader img attr{src}"
+	declare -p chapterImages >/dev/null
 
-  if [ ! -d "$image_dir" ]; then
-    mkdir ~/.cache/manga-cli
-  fi
+	if [ ! -d "$image_dir" ]; then
+		mkdir ~/.cache/manga-cli
+	fi
 }
 
 choose_next() {
-  clear
-  echo -e "${White}next chapter ${Green}(n)"
-  echo -e "${White}quit ${Green}(q)"
-  echo -e "${White}previous chapter ${Green}(p)"
+	clear
+	echo -e "${White}next chapter ${Green}(n)"
+	echo -e "${White}quit ${Green}(q)"
+	echo -e "${White}previous chapter ${Green}(p)"
 
-  echo -n -e "${Yellow}Enter Option: "
-  read -r option
+	echo -n -e "${Yellow}Enter Option: "
+	read -r option
 
-  if [ "${option}" = "n" ]; then
-    chapterNumber=$((chapterNumber + 1))
-    get_images "$mangaLink" "$chapterNumber"
-    download_chapter
+	if [ "${option}" = "n" ]; then
+		chapterNumber=$((chapterNumber + 1))
+		get_images "$mangaLink" "$chapterNumber"
+		download_chapter
 
-  elif [ "${option}" = "p" ]; then
-    chapterNumber=$((chapterNumber - 1))
-    get_images "$mangaLink" "$chapterNumber"
-    download_chapter
+	elif [ "${option}" = "p" ]; then
+		chapterNumber=$((chapterNumber - 1))
+		get_images "$mangaLink" "$chapterNumber"
+		download_chapter
 
-  elif [ "${option}" = "q" ]; then
-    exit 1
+	elif [ "${option}" = "q" ]; then
+		exit 1
 
-  else
-    choose_next
+	else
+		choose_next
 
-  fi
+	fi
 
 }
 
 # Flags
-while [ "$1" != "" ]; do
-  case $1 in
-  -h | --help)
-
-    help_text
-    exit 1
-    ;;
-  --pdf)
-
-    file_format="pdf"
-    ;;
-
-  -c | --clear-cache)
-    rm -rf "$image_dir"
-    echo "Cleared cache.."
-    exit 1
-    ;;
-  *) ;;
-  esac
-  shift # remove the current value for `$1` and use the next
+while getopts "pcho:" option; do
+	case $option in
+	p)
+		file_format="pdf"
+		;;
+	c)
+		rm -rf $image_dir
+		echo "Cleared Cache"
+		;;
+	h)
+		help_text
+		exit 1
+		;;
+	o)
+		pdf_viewer=$OPTARG
+		;;
+	*)
+		help_text
+		exit 1
+		;;
+	esac
 done
 
 main() {
-  search_manga
+	search_manga
 
-  select_chapter
+	select_chapter
 
-  download_chapter
+	download_chapter
 
-  choose_next
-  clear
+	choose_next
+	clear
 }
 
 main
