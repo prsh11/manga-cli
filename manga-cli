@@ -10,6 +10,7 @@ pdf_viewer=zathura
 Green='\033[0;32m'
 Yellow='\033[0;33m'
 White='\033[0;37m'
+EndColor='\033[0m'
 
 mangaName="${@: -1}"
 prog="$0"
@@ -34,6 +35,10 @@ help_text() {
 		        -o  select pdf viewer 
 		        -h  displays this message
 	EOF
+}
+
+end_color() {
+  echo -n -e "${EndColor}"
 }
 
 search_manga() {
@@ -211,3 +216,4 @@ main() {
 }
 
 main
+end_color
