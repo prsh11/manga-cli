@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+trap exit_script SIGINT SIGTERM
+
 search_url="https://m.manganelo.com/search/story/"
 image_dir="$HOME/.cache/manga-cli/"
 
@@ -36,6 +39,15 @@ help_text() {
 		        -h  displays this message
 	EOF
 }
+
+
+exit_script() {
+  trap - SIGINT SIGTERM
+  echo "Exiting script"
+  end_color
+  exit 1
+}
+
 
 end_color() {
   echo -n -e "${EndColor}"
@@ -171,6 +183,7 @@ choose_next() {
     download_chapter
 
   elif [ "${option}" = "q" ]; then
+    end_color
     exit 1
 
   else
