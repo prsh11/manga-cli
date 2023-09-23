@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+trap exit_script SIGINT SIGTERM
+
 search_url="https://m.manganelo.com/search/story/"
 image_dir="$HOME/.cache/manga-cli/"
 
@@ -10,6 +13,7 @@ pdf_viewer=zathura
 Green='\033[0;32m'
 Yellow='\033[0;33m'
 White='\033[0;37m'
+EndColor='\033[0m'
 
 mangaName="${@: -1}"
 prog="$0"
@@ -34,6 +38,19 @@ help_text() {
 		        -o  select pdf viewer 
 		        -h  displays this message
 	EOF
+}
+
+
+exit_script() {
+  trap - SIGINT SIGTERM
+  echo "Exiting script"
+  end_color
+  exit 1
+}
+
+
+end_color() {
+  echo -n -e "${EndColor}"
 }
 
 search_manga() {
@@ -166,6 +183,7 @@ choose_next() {
     download_chapter
 
   elif [ "${option}" = "q" ]; then
+    end_color
     exit 1
 
   else
@@ -211,3 +229,4 @@ main() {
 }
 
 main
+end_color
