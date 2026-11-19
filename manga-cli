@@ -29,13 +29,13 @@ help_text() {
   while IFS= read -r line; do
     printf "%s\n" "$line"
   done <<-EOF
-		  
+
 			Usage:
-		        ${prog} [option] 
+		        ${prog} [option]
 			Options:
 		        -p  change file format to pdf
 		        -c  clears the downloaded files
-		        -o  select pdf viewer 
+		        -o  select pdf viewer
 		        -h  displays this message
 	EOF
 }
@@ -94,7 +94,8 @@ select_chapter() {
 create_file() {
   if [ $file_format == "pdf" ]; then
     echo "Converting to pdf..."
-    convert $($ls -v $image_dir*.jpg) $image_dir$name-$chapterNumber.pdf
+    magick -page A4 $($ls -v $image_dir*.jpg) $image_dir$name-$chapterNumber.pdf
+
     rm $image_dir/*.jpg
     clear
     $pdf_viewer $image_dir$name-$chapterNumber.pdf &
@@ -102,7 +103,7 @@ create_file() {
   else
 
     echo "Converting to cbz..."
-    zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
+    mogrify -extent 1440x1100 $image_dir*.jpg && zip -q $image_dir$name-$chapterNumber.cbz $image_dir*.jpg
 
     rm $image_dir/*.jpg
     clear
